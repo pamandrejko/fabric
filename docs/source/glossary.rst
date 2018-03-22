@@ -13,11 +13,12 @@ read the entire thing in one sitting if you like; it's pretty enlightening!
 Anchor Peer
 -----------
 
-A peer node on a channel that all other peers can discover and communicate with.
-Each Member_ on a channel has an anchor peer (or multiple anchor peers to prevent
-single point of failure), allowing for peers belonging to different Members to
-discover all existing peers on a channel.
-
+Anchor peers are used to bootstrap gossip communication between peers from
+different organizations. Cross-organization gossip is scoped to channels. In
+order for cross-org gossip to work, peers from one org need to know at least
+one address of a peer from other orgs. This address is the anchor peer. Each
+organization that has a peer will have at least one of its peers defined as
+the anchor peer.
 
 .. _Block:
 
@@ -99,6 +100,16 @@ Consensus
 A broader term overarching the entire transactional flow, which serves to generate
 an agreement on the order and to confirm the correctness of the set of transactions
 constituting a block.
+
+.. Consortium
+
+Consortium
+----------
+
+A consortium is a collection of non-orderer organizations on the blockchain network.
+These are the organizations that form and join channels and that own peers. While
+a blockchain network can have multiple consortia, most blockchain networks have
+a single consortium. All members of a channel must be in the same consortium.
 
 .. _Current-State:
 
@@ -229,24 +240,22 @@ channel, who then distribute them to other peers within the same member cluster.
 Ledger
 ------
 
-A ledger is a channel's chain and current state data which is maintained by each
-peer on the channel.
+A ledger consists of two distinct, though related, parts -- a "blockchain" and the
+"state database". Like other kinds of ledgers, the entries on a blockchain ledger
+are ordered by the time in which an update to the ledger is made. Unlike other
+ledgers, blockchain ledgers are **immutable** -- that is, once a block has been added to
+the chain, it cannot be changed. In contrast, the state database tracks the values
+for all keys that have been added to the chain (if a car is the "key", a "value"
+might represent who owns the car). The latest values of these keys is called the
+"world state" or the "current state". For example, if a car has been bought and
+sold several times, the world state will reflect the current owner of the car.
 
 .. _Member:
 
 Member
 ------
 
-Also known as "organizations", members in a blockchain network, similar to the
-members of any group, form the structure of the network. A member can be as large
-as a multi-national corporation or as small as an individual. Members are enrolled
-into the network with a certificate that grants them permissions to use the
-network as either a service provider (for example, issuing certificates,
-validating/ordering transactions) or as a consumer. The former provides
-foundational blockchain services that include transaction validation,
-transaction ordering, and certificate management services. Consumer members use
-the network to invoke transactions against the distributed ledger. Members can
-have multiple Peers.
+See Organization_.
 
 .. _MSP:
 
@@ -289,7 +298,16 @@ identity material tied to each Member_.
 
 Organization
 -----------------
-See Member.
+Also known as "members", organizations are invited to join the blockchain network
+by a blockchain service provider. Once an organization joins the
+network they become a member and are enrolled into the network with a certificate
+that grants them permissions to use the network as either a service provider
+(for example, issuing certificates, validating/ordering transactions)or as a
+consumer. An organization can be as large as a multi-national corporation
+or as small as an individual. The transaction endpoint of an
+organization is a Peer_. A collection of organizations form a Consortium_.
+While all of the organizations on a network are members, not every organization
+will be part of a consortium.
 
 .. _Peer:
 
