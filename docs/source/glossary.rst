@@ -1,4 +1,3 @@
-*Needs Review*
 
 Glossary
 ===========================
