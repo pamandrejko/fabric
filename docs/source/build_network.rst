@@ -680,8 +680,9 @@ Applications interact with the blockchain ledger through ``chaincode``.  As
 such we need to install the chaincode on every peer that will execute and
 endorse our transactions, and then instantiate the chaincode on the channel.
 
-First, install the sample Go, Node.js or Java chaincode onto one of the four peer nodes.  These commands
-place the specified source code flavor onto our peer's filesystem.
+First, install the sample Go, Node.js or Java chaincode onto a peer0
+node in Org1. These commands place the specified source
+code flavor onto our peer's filesystem.
 
 .. note:: You can only install one version of the source code per chaincode name
           and version.  The source code exists on the peer's file system in the
@@ -712,6 +713,51 @@ place the specified source code flavor onto our peer's filesystem.
     # make note of the -l flag to indicate "java" chaincode
     # for java chaincode -p takes the absolute path to the java chaincode
     peer chaincode install -n mycc -v 1.0 -l java -p /opt/gopath/src/github.com/chaincode/chaincode_example02/java/
+
+When we instantiate the chaincode on the channel, the endorsement policy will be
+set to require endorsements from an peer in both Org1 and Org2. Therefore, we
+also need to install the chaincode on a peer in Org2.
+
+Modify the following four environment variables to issue the install command
+against peer0 in Org2:
+
+.. code:: bash
+
+   # Environment variables for PEER0
+
+   CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
+   CORE_PEER_ADDRESS=peer0.org2.example.com:7051
+   CORE_PEER_LOCALMSPID="Org2MSP"
+   CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
+
+Now install the sample Go, Node.js or Java chaincode onto a peer0
+in Org2. These commands place the specified source
+code flavor onto our peer's filesystem.
+
+ **Golang**
+
+.. code:: bash
+
+    # this installs the Go chaincode. For go chaincode -p takes the relative path from $GOPATH/src
+    peer chaincode install -n mycc -v 1.0 -p github.com/chaincode/chaincode_example02/go/
+
+**Node.js**
+
+.. code:: bash
+
+    # this installs the Node.js chaincode
+    # make note of the -l flag to indicate "node" chaincode
+    # for node chaincode -p takes the absolute path to the node.js chaincode
+    peer chaincode install -n mycc -v 1.0 -l node -p /opt/gopath/src/github.com/chaincode/chaincode_example02/node/
+
+**Java**
+
+.. code:: bash
+
+    # make note of the -l flag to indicate "java" chaincode
+    # for java chaincode -p takes the absolute path to the java chaincode
+    peer chaincode install -n mycc -v 1.0 -l java -p /opt/gopath/src/github.com/chaincode/chaincode_example02/java/
+
 
 Next, instantiate the chaincode on the channel. This will initialize the
 chaincode on the channel, set the endorsement policy for the chaincode, and
